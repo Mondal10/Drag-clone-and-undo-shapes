@@ -1,40 +1,40 @@
 function init(){
 
-			// var BB = canvas.getBoundingClientRect();
-   //  		var offsetX = BB.left;
-   //  		var offsetY = BB.top;
-   			// var shapeArr = [];
+	// var BB = canvas.getBoundingClientRect();
+	//  var offsetX = BB.left;
+	//  var offsetY = BB.top;
+   	// var shapeArr = [];
+			
+			var stage = new createjs.Stage("canvas");    //creating stage for displaying object
 
-			var stage = new createjs.Stage("canvas");
+			stage.enableMouseOver();     //enabling mouse events on stage
 
-			stage.enableMouseOver();
-
-			var circle1 = new createjs.Shape();
+			var circle1 = new createjs.Shape();   //drawing circle
 			circle1.graphics.beginFill("tomato").drawCircle(0,0,20);
 			circle1.x=30;
 			circle1.y=30;
 
-			var circle2 = new createjs.Shape();
+			var circle2 = new createjs.Shape();  //drawing circle
 			circle2.graphics.beginFill("MediumSeaGreen").drawCircle(0,0,20);
 			circle2.x=30;
 			circle2.y=85;
 
-			var pentagon = new createjs.Shape();
+			var pentagon = new createjs.Shape();   //drawing pentagon
 			pentagon.graphics.beginFill("slateblue").drawPolyStar(0, 0, 20, 5, 0, 90);
 			pentagon.x = 30;
 			pentagon.y = 135;
 
-			var rectangle = new createjs.Shape();
+			var rectangle = new createjs.Shape();  //drawing rectangle
 			rectangle.graphics.beginFill("orange").drawRect(-10,-10,20,50);
 			rectangle.x=30;
 			rectangle.y=180;
 
-			var star = new createjs.Shape();
+			var star = new createjs.Shape();  //drawing star
 			star.graphics.beginFill("maroon").drawPolyStar(0,0,20,5,0.5,-90);
 			star.x=30;
 			star.y=255;
 
-			var block = new createjs.Shape();
+			var block = new createjs.Shape();  //drawing block
 			block.graphics.beginFill("black").drawRect(-10,-10,25,25);
 			block.x= 30;
 			block.y= 300;
@@ -46,23 +46,29 @@ function init(){
 			hit.graphics.beginFill("#000").drawRect(0, 0, text.getMeasuredWidth(), text.getMeasuredHeight());
 			text.hitArea = hit;
 			
-
-			var dragger = new createjs.Container();
+			
+			//creating a container within the stage to drag that particular object
+			var dragger = new createjs.Container();  
 			// dragger.x = dragger.y = 0;    //to set dragger area
 			// dragger.addChild(circle1,circle2,pentagon, rectangle,star);
 			// stage.addChild(dragger);
+	
+			//add the shapes(objects) drawn on the stage
 			stage.addChild(circle1,circle2,pentagon,rectangle,star,block,text);
+			
+			//**updating the stage (basically clearing the canvas for dragiing purpose **)
 			stage.update();
 			
 			var trans = false;
 	
+			//adding mouseevents on the stage 
 			stage.on("mousedown", onClick);
 			// dragger.on("pressup" , up);
 			stage.on("mouseover", mouseOver);
 			stage.on("mouseout", mouseOut);
 			stage.on("dblclick", inDblClick);
-
-			stage.on("contextmenu", function rightClick() {console.log("yes");});
+			
+			//stage.on("contextmenu", function rightClick() {console.log("yes");});
 
 			// function rightClick(){
 			// 	console.log("yess");
@@ -76,15 +82,17 @@ function init(){
 			// 	console.log("ok");
 
 			// }
-
+			
+			// for creating replicas of the object which are double clicked
 			function inDblClick(e){
-
+				
+				//e.target.id is id of the objects it returns id on double click on object
 				if(e.target.id==1){
 					var circle = new createjs.Shape();
 					circle.graphics.beginFill("tomato").drawCircle(0,0,40);
 					circle.x = 150;
 					circle.y = 100;
-					dragger.addChild(circle);
+					dragger.addChild(circle);  //adding the shape on the dragger container wich was created for dragging
 					
 					// shapeArr.push(circle);
 					// dragger.removeChild(circle);     //remove child on right click	
@@ -140,9 +148,11 @@ function init(){
 					// shapeArr.pop();
 					// console.log("ok");
 					// stage.removeChild(shapeArr);
-					dragger.children.pop();
+					dragger.children.pop();  //**for undo we pop the object from array and update the stage so the shape disappears
 
 				}
+				
+				//adding the repliicated objects(shapes) on the stage 
 				stage.addChild(dragger);
 				// console.log(e.target.id);
 				// console.log(shapeArr);
@@ -152,14 +162,15 @@ function init(){
 				// console.log(dragger);
 				stage.update();
 			}
-			
+			//**on mousemove event the x,y co-ordinates of shape are set to the x,y co-ordinates of the stage
 			function onMove(e){
 				e.target.x = e.stageX;
 				e.target.y = e.stageY;
 				stage.update();
 				
 			}
-
+			
+			//**when mouse is clicked the mousemove function is called
 			function onClick(e){
 				
 				// e.target.shadow = new createjs.Shadow("grey",5,5,2);
@@ -178,7 +189,8 @@ function init(){
 			// 	// console.log();
 			// 	stage.update();
 			// }
-
+			
+			//to make shape translucent on mouseover
 			function mouseOver(e){
 				e.target.alpha = 0.5;
 				// console.log("hello");
